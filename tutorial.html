@@ -1,0 +1,782 @@
+<?php include("header-styles.php"); ?>
+<!-- header-styles does not include a closing head tag for compatibility with the builder page -->
+<script src="src/bootstrap.min.js"></script>
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/tutorial.css" rel="stylesheet">
+<!-- get MathJax from secure (HTTPS) CDN -->
+<script type="text/javascript"
+  src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script src ="analytics.js"></script>
+<meta name="google-site-verification" content="wq-MzHE_599sKpmAIAZkURalSvRGOIzhDnC81xb6mtY" />
+
+</head>
+<body id="tutorial"> <!-- the body id determines what gets highlighted in the menu bar -->
+<!-- header-menu will insert the menu bar, logo and links -->
+<?php include("header-menu.php"); ?>
+
+<div id="content">
+	<!-- Nav tabs -->
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#start" data-toggle="tab">Getting Started</a></li>
+	  <li><a href="#docs" data-toggle="tab">Tutorial</a></li>
+	  <li><a href="#video" data-toggle="tab">Video Tutorial</a></li>
+	  <li><a href="#faqs" data-toggle="tab">FAQs</a></li>
+	</ul>
+
+	<!-- Tab panes -->
+	<div class="tab-content">
+		<div class="tab-pane active" id="start">
+		  	<center><h2>Welcome to esyN</h2></center>
+		  	<p>esyN is designed for ease of use. To dive in and make your first network, follow these simple steps.</p>
+		  	<h3>Making a Network Diagram</h3>
+			<ol>
+				<li> Click to the "Diagrams" page in the menu bar</li>
+				<li> The dark blue area is where you create your network</li>
+				<li> Click on the "Node" button in the top right corner</li>
+				<li> Click anywhere in the blue workspace to create a node</li>
+				<li> Click on the newly created node and change its name to "A" using the panel on the right - remember to click "Set" to apply the change </li>
+				<li> You can create as many nodes as you like this way. Repeat the process to create a node named "B"</li>
+				<li> Next let's create an edge between nodes A and B. Click on the "Edge" button on the top right corner to enable edge creation, then click once on each of A and B to create the edge. Notice that because we're in Edge mode, the control panel on the right does not allow us to edit the properties of the nodes themselves</li>
+				<li>While still in Edge mode, try clicking an empty region of the blue canvas. Nothing happens because you can't create nodes while in Edge mode.</li>
+				<li>Let's save our work. First change the default project name in the box below the blue canvas to "My first project". Now click save in the tools menu on the left. As you can see, we have three options. If you're logged in to esyN, select "Save online" to save this project online with your account so you can easily work on it later, from anywhere in the world. Otherwise select "Save offline" to download the project file so that you can upload it later and continue. Don't worry about "Save a copy" for now.</li>
+				<li> That's it! Experiment with the basic features and try constructing a simple network from scratch. Then try some of the more advanced tutorials to learn how to get the most out of esyN. We recommend you learn how to automatically retrieve interaction data next.</li>
+			</ol>
+
+			<p>Getting started making network diagrams with esyN is easy. There are a couple of extra (simple) rules to learn to use the Models tool - let's try it now.</p>
+
+			<h3>Making a Model</h3>
+			<ol>
+				<li>Click on Models in the menu at the top of the page</li>
+				<li>Notice that the tool looks almost identical to the Diagrams tool we just tried, but with a couple of extra options in the control panel on the right. We're going to make a simple model of an enzyme Click "Place" in the control panel, then click anywhere in the blue canvas to create a place.</li>
+				<li>In a Model, places represent things we can quantify such as proteins. Let's name this place "Enzyme A". Click on the place we just created, then change it's name in the control panel on the right. Remember to click "Set" to make the change.</li>
+				<li>Go through the same steps to create two more places called "Substrate" and "Product"</li>
+				<li>In a Model, we are describing process that can happen to the places. Let's create a model of the conversion of Substrate into Produce by Enzyme A. First we need to create a Transition node. Select "Transition" from the control panel on the right, then click anywhere in the blue canvas to create the node. Transition nodes are drawn as squares so we can tell them apart from places. Name this transition "Conversion by A"</li>
+				<ul>
+				<li>As we have said, in a Model we use places and transitions to describe processes. Transitions represent actions that can happen to entities we represent with places. In the "Conversion by A" process, Substrate is consumed and Product is produced. Enzyme A is involved but is not consumed or produced.</li>
+				<li>To represent this process, we draw arrows from places to transitions, and from transitions to places (i.e. Edges from places to places - or transitions to transitions are not allowed!). These arrows represent the input and output of actions. Enter Edge mode by clicking "Normal Edge" on the right hand side. To create an edge, first click the source node and then click the target node.</li>
+				</ul>
+				<li>Create an edge with Substrate as the source and "Conversion by A" as the target. Create another edge with "Conversion by A" as the source and Product as the target. Looking at the graph now, it represents a direct conversion of Substrate to Product. If that was the process we wanted to describe, we would be done. But this reaction requires catalysis by Enzyme A. Let's add that.</li>
+				<li>Create an edge from Enzyme A to "Conversion by A". Now Enzyme A is also required as an input for the transition. But as it is, only Product is an output place. So our model says that if the transition happens, both Substrate and Enzyme A will be consumed. Let's fix that.</li>
+				<li>Create another edge with "Conversion by A" as the source and Enzyme A as the target. Now our model says that although Enzyme A must be present (it is an input place for the transition), it is not consumed because it is also an output place</li>
+			</ol>
+			<p>That's it! We've created a simple model of an enzyme-catalysed conversion of one substance into another. Try to add another substrate that is converted by the same enzyme into a different product (note: you don't need to create another place representing the same enzyme). Once you're comfortable with creating the layout of a Model, read the Tutorial section which explains how to add more detail to your model e.g. the amount of a substance that must be present before a given transition can happen, or the amount of each output that is produced. There are also some more advanced types of place and transition help with the organisation of large models. Finally, the Tutorial section also explains how to export and simulate the model you have constructed.</p>
+		</div>
+
+		<div class="tab-pane" id="docs">
+		  	<center><h2>Tutorial </h2></center>
+		  	<p>This is the main esyN tutorial and documentation, covering everything from the very basics to the most advanced features. If this is your first time using this site, we reccomend you work through the "Getting Started" page for a quick - hands on - introduction</p>
+
+            <br>
+			<a name="Background"></a>
+			<h4>1.0 Background</h4>
+			<p>
+			esyN is a web tool that allows the construction of two distinct types of networks, Diagrams and Models. Diagrams are simply graphs of nodes and edges, which are useful to visualize the relationships between the objects represented by the nodes. Models are more complex and allow you to visually create a model that describes a process, based on adding an underlying formalism (Petri Nets), which can be simulated.
+			</p>
+			<p>
+				In addition to being a tool for creating networks, esyN makes it easy to share projects and collaborate on them. Projects can also be made public, allowing anybody to view them.
+			</p>
+			<br>
+			<h4>1.1 Overview</h4>
+			<p>In esyN, all networks are organised into Projects. Each project can contain any number of related networks, which all ultimately form part of a larger underlying network.</p>
+			<center><img src="overview.png"></center>
+
+			<a name="Diagrams"></a>  
+			<h4>2.0 Diagrams</h4>
+			<p>
+			Diagrams are used to visualise relationships and interactions between the objects represented by the nodes in the network. This type of representation is increasingly popular in biology as more and more data is available about interaction networks at various scales. The esyN Diagrams tool is designed to make it easy to interactively build a network, drawing on this large volume of information. 
+			</p>
+
+			<p>Firstly, we reccomend working through the steps in the "Getting Started" section, to get to grips with the basics of making a network diagram</p>
+
+			<h4>2.1 Building a network diagram</h4>
+			
+			<p>Nodes and edges can be created as needed by following the steps outlined in the "Getting started" tutorial. In esyN, when you're working on a network using the Diagrams tool, that network is associated with a project. Every project can contain several networks, which are all related to each other. To make organising large networks easier, you can create several smaller networks and then use our "Merge" tool to combine them into one large network. It is important to remember that different networks in one project are assumed to be related to each other, and to form parts of a larger network. To create a new network, click "Network" in the options on the left, then select "New network". This will create a new empty network in the same project. To rename the network, select "Network" then "Rename network" in the controls on the left. Similarly to delete a network, select "Netowork" then "Delete network" on the left hand side. This option will delete the currently open network. If you delete a nested network, the node that contained the network will not be deleted, it will just become a normal node. To switch to any of the networks in the current project, use the "Select a network" dropdown on the left hand side.</p> <br>
+
+			<b>Edges - directed and undirected</b>
+			<p>Edges connecting nodes can be either directed or undirected. To create an undirected edge, select "Edge" in the panel to the right of the editor, to create a directed edge select "directed edge". As the name implies, a directed edge has a source and a target and typically has a different meaning for the source and target node. For example, in a gene regulatory network, the edge source might be a transcription factor, and the target would be a gene it regulates. Here the direction of the edge tells us which gene is the regulator and which gene is regulated. Undirected edges, in contrast, imply that the connected elements are equivalent in terms of the interaction. A typical example is a physical interaction between two proteins. Here both proteins interact with each other so there is no direction.</p>
+
+			<b>Edges - interaction type</b>
+			<p>Both directed and undirected edges can be associated with a type. The default type is "None", which means unspecified or unknown. Edge types can also be set to either "Physical" or "Genetic". Edges added automatically will be given the type retrieved from the database.</p>
+
+			<h4>2.2 Automatically retrieve interactions</h4>
+			<p>As well as manually adding interactions between nodes, for biological networks where nodes represent genes or proteins, esyN provides users a simple interface to retrieve interaction data automatically. Currently this is possible for Human, Fly (<i>D. melanogaster</i>) and Yeast (<i>S. cerevisiae</i>) data.</p>
+			<p>First create a node, and name it with the name of a gene or protein of interest and select it. Select "Interactions" from the options on the left, or scroll to the bottom of the page to find the "Interactions" section of "Advanced tools". First select an orgamism and (optionally) a type of interaction to retrieve, then click "Get interactions". A list of interactions will appear below the button within a few seconds. These interactions can be added one by one, or all interactions can be added by clicking "Add all". This feature is powered by InterMine databases (flymine, yeastmine, metabolicmine).</p><br>
+
+			<b>Advanced details</b>
+			<p>When interactions are automatically retrieved, the tool first checks whether the interacting node is already present in the project. If so, the retrieved interaction will be added to the existing node. If the existing node is not in the current network, then a disperse node will be created in the current network.</p><br>
+
+			<h4>2.3 Disperse nodes</h4>
+			<p>Disperse nodes are simply a way for there to be multiple references to one entity. As a user, you just need to create a node with the same name as an existing node in another subnetwork and they will automatically be linked. This doesn't add extra functionality, it's just for convenience when working with large, complex networks. It means that you can refer to the same protein multiple times in different subnetworks. When you use the "merge" tool to combine all the separate networks in a project into one, all appearances of each disperse node will be combined into one, which has all the edges added to any of the appearances. Disperse nodes are identified by their blue outline.</p>
+
+			<!-- Disable coarse nodes for now
+			<h3>Coarse nodes</h3><br/>
+			<p>Coarse nodes are a way to organise nodes into classes with common interactions. Coarse nodes can be created either by selecting a node and adding a parent, or selecting a node and adding a child. In either case it is the parent node that is said to be coarse.</p>
+			<p>Coarse nodes represent conceptual groupings of nodes, not real entities as represented by their child nodes. When we add edges to coarse nodes, we are representing the idea that this edge applies for all child nodes. Therefore in the final network (produced with the merge tool), there will be no reference to the parent node. Instead, we will see that every one of its child nodes has inherited every one of its edges.</p>
+			-->
+			<h4>2.4 Nested networks</h4>
+			<p>Nested networks are a way to organise a large network into smaller sections, for example grouping all of the nodes and edges related to protein folding or glucose transport together. Using nested networks allows us to see the overall connections between functional groups of nodes without seeing the full detail of those groups (unless we want to). This method of organising network diagrams can be thought of as a hierarchy from more abstract at the top level, to more detailed layers below. </p>
+
+			<p>For example, if we are describing the interactions and pathways that a specific protein of interest is involved in, we might make a nested network containing the degradation pathway for our protein. </p>
+
+			<p>The edges connected to nodes containing networks are also only representative that something in the current network has an edge connecting it to something in the nested network. This interaction must be explicitly created by the user somewhere! This will almost always be an edge inside the nested network, connecting one of the nodes in the nested network to a node in the network in which it is nested. The node that forms the link will be disperse (see above).</p>
+
+			<p>For an example project using nested networks, go to the Explore page and open the public project "Example: Nested Networks"</p>
+
+			<!-- Disable coarse nodes for now
+			<h3>The difference between nested networks and coarse nodes</h3><br/>
+			<p>When working with Coarse nodes and Nested networks, it is imporant to understand the differences between them. 
+			If node A contains a nested network, in which nodes B and C appear, node A is not a parent node if B or C. Nested networks visually organise subsections of a larger network, whereas paren-child relationships are a logical relationship between two nodes. If we make another network in which we use the Advanced tools section to modify node D such that it is a parent node of E and F, then we are saying that anywhere node D appears, we actually mean E and F. This is analagous to arranging nodes into classes, for example creating a node called "Protein Kinases", which is a parent node of all proteins with protein kinase activity. This way, anywhere we want to refer to this entire class of proteins, we simply place an edge to the parent node. In the final network (created using the "Merge" tool), all child nodes of the "Protein Kinases" parent node will inherit all of its edges. In summary:
+			<ul>
+				<li>Nested networks</li>
+					<ol>
+						<li>Organise larger networks into subsections</li>
+						<li>The node containing the network doesn't exist in the final network</li>
+						<li>The edges of the containing node are also conceptual and do not exist in the final network</li>
+					</ol>
+				<li>Coarse nodes</li>
+				<ol>
+					<li>Organise nodes into classes</li>
+					<li>Parent nodes do not exist in the final network</li>
+					<li>Edges to parent nodes will be inherited by every child node</li>
+				</ol>
+			</ul>
+			</p>
+			<p>Neither nested networks or coarse nodes will appear in the final (merged) network. This is because they both refer to concepts, whereas the final network only contains the real entities described by the nodes in the network. Nodes containing nested networks are essentially replaced by the network they contain during the merge operation. Parent places are replaced by their child nodes, with any edges to the parent place being duplicated for every child node. </p>
+			-->
+            <h4>2.5 Merge</h4>
+            <b>Merge all networks in a project</b>
+			<p>"Merging" networks means combining all the networks present in a project and creating one network that contains all the information. During the merge operation, nodes that contain nested networks are removed, as well as their edges. You can merge all networks in your project by selecting "Merge" from the list of options on the left. When the merge operation is complete, the viewer will switch to the merged network.</p>
+			
+			<p>IMPORTANT: If you merge all networks in a project and then continue working, it is important to delete the previous merge result before repeating the merge operation.</p>
+			<p>The edges connected to nodes containing networks are only representative of the fact that something in the current network has an edge connecting it to something in the nested network. This interaction must be explicitly created by the user. This will almost always be an edge inside the nested network, connecting one of the nodes in the nested network to a node in the network in which it is nested. The node that forms the link will be disperse (see above and section 3.7 - nested networks in Diagrams behave like coarse transitions in Models.)</p>
+
+			<b>Merge multiple projects</b>
+			<p>
+				In esyN, users can easily combine different projects into one. This enables projects to act like reusable modules. When working on a project, users are able to import any of their own projects, or any published project through the "Merge" menu item on the left of the builder tool page. 
+			</p>
+
+			<h4>2.6 Upload from cytoscape</h3>
+
+			<p>To upload a network created in Cytoscape to esyN, you must use Cytoscape V3+. From cytoscape, export your network as a "cytoscape json (*.cyjs)" format file. In the exyN Diagrams tool, select "Upload", and navigate to your file in the popup box. When you have selected the file, select "Upload" in the popup. The popup box will close once the network has been uploaded. Currently, you can only upload into a new project. Uploading a file will replace the contents of the current project with the network found in the file.</p><br>
+
+			<h4>2.7 Upload from tabular data</h4>
+			<p>Interaction data in csv format can be uploaded to EsyN. Select "upload" from the menu to the left of the Diagrams tool. In the popup window, select csv format. You will be presented with some simple settings to describe the format of the file: whether or not there is a header row (column names), whether the edges are directed, and which column to use for edge source, target and type. For an undirected network, it does not matter which way round the source and target columns are defined. There must be a column in the csv file for interaction type. If the value for an edge is either "genetic" or "physical", this information will be included in the generated network, anything else will be ignored. Even if you don't have interaction type information, the column must be present with a value for each edge (in this case you may wish to use the value "none" or "unknown" for clarity, but any value other than "genetic" and "physical" will be treated as none). </p>
+
+			<h4>2.8 Downloading and exporting projects</h4>
+			<b>Download an esyN project</b>
+			<p>
+				esyN projects can be downloaded by selecting "save" > "save offline" from the menu to the left of the Diagrams tool. This project can be uploaded later and edited, enabling users to work with the esyN network building tool without registering.
+			</p>
+			<b>Download in csv format</b>
+			<p>
+				There are 3 options for downloading a project as a csv. Importantly, projects can be downloaded with and without merging the networks it contains. 
+				<ul>
+					<li>Export project as csv - this generates a csv file containing all edges in the project, including edges connected to nodes containing nested networks.</li>
+					<li>Merge and export project as csv - this generates a csv file containing all edges present <i>after</i> merging the project.</li>
+					<li>Export current network as csv - this generates a csv file containing all edges in the network currently loaded in the builder tool.</li>
+				</ul>
+			</p>
+
+			<h4>2.8 Common sources of error:</h4>
+            <ol>
+				<li> When nesting networks, be careful that the hierarchy of networks makes sense</li>
+				<li> Don't create loops of nested networks</li>
+				<li> When collaborating on a project with multiple editors, make sure only one person is editing the network at a time - otherwise editors will overwrite each others changes.</li>
+			</ol>
+
+             <br>
+			<h4>3.0 Models</h4>
+			<p>
+			Models are a more sophisticated version of diagrams. The nodes in a network are of two types: places and transitions. Places represent objects such as genes, proteins, etc. Transitions represent actions (e.g. phosphorylation, binding, folding, etc). 
+			The edges are directed and places connect only to transitions and vice versa. Places contain a given number of tokens, which are then used when the transition is fired. The number of tokens used is the weigh of the edge between the place and the transition. The model with its underlying Petri Net formalism allows the user to simulate the networks and make quantitative predictions on its behavior. 
+			</p>
+
+			<p>Firstly, we reccomend working through the steps in the "Getting Started" section, to get to grips with the basics of making a Model</p><br>
+
+			<h4>3.1 Making a model interactively</h4>
+			<p>Places, Transitions and edges can be created as needed by following the steps outlined in the "Getting started" tutorial. As for Diagrams, any network you create with the Model tool is associated with a project. Every project can contain several networks, which are all related to each other. To make organising large networks easier, you can create several smaller networks and then use our "Merge" tool to combine them into one large network. In models networks can be nested only inside transitions (see coarse transitions below). It is important to remember that different networks in one project are assumed to be related to each other, and to form parts of a larger network. To create a new network, click "Network" in the options on the left, then select "New network". This will create a new empty network in the same project. To rename the network, select "Network" then "Rename network" in the controls on the left. Similarly to delete a network, select "Netowork" then "Delete network" on the left hand side. This option will delete the currently open network. If you delete a nested network, the transition that contained the network will not be deleted, it will just become a normal transition. To switch to any of the networks in the current project, use the "Select a network" dropdown on the left hand side.</p><br>
+
+			<p>
+				When constructing a network, certain logical stuctures are frequently constucted. To speed this process up, several commonly used structures can be created with a single click by selecting "Modules" from the menu on the left. After selecting a module to add, clicking on the network window will create the module at that position. The nodes can now be edited to repressent places in your network.
+
+			</p>
+
+			<h4>3.2 Tokens, marking, multiplicity</h4>
+			<p>Each place contains a certain number of the objects it represents - the number of tokens. The marking refers a configuration of the network with a given number of tokens in each place. The multiplicity of the edge refers to 
+			how many tokens are moved across that edge. If the edge connects a place to a transition, a number of tokens equal to the 
+			multiplicity of the edge will be removed from the place. If the edge connects a transition to a place then a number of tokens equal to the multiplicity will be added to the place. A transition can only occur if the number of tokens in all of its input places is at least the value of the mulitplicity of the edge that connects them. Transitions that can fire are said to be "enabled". See "Simulating the model" for more information. 
+			</p>
+			<br>
+
+			<h4>3.3 Mass action constant k</h4>
+			<p>To use Mass Action kinetics, each transition can have a parameter, k, associated with it. This parameter is used when simulating the model to calculate the rate of each reaction (transition) at each timepoint in the simulation. By default, k = 1 for all transitions. At each step in the simulation, the rate of each reaction is calculated as follows. For each transition t, with n input places \( [P_1][P_2]...[P_n]\), where \([P_1]\) is the number of tokens in place \(P_1\) 
+			\[\begin{aligned}
+			rate_t = k_t[P_1][P_2]...[P_n] \\
+			\end{aligned} \]
+
+			</p>
+
+			<h4>3.4 Inhibitor edges</h4>
+			<p> An inibitor edge connects a place to a transition (but not the vice versa). If the place contains more or the same number of tokens as the edge multiplicity, then the connected transition cannot happen. This will be true until the number of tokens in the input place for the inhibitor edge is reduced by some other transition.  </p>
+			<br>
+			<h4>3.5 Retrieve interactions automatically</h4>
+            <p>In the case of biological networks, where places represent genes or proteins, esyN provides users a simple interface to retrieve other interacting places automatically. Currently this is possible for Human, Fly (<i>D. melanogaster</i>) and Yeast (<i>S. cerevisiae</i>) data.</p>
+			<p>First create a place, and name it with the name of a gene or protein of interest and select it. Select "Interactions" from the options on the left, or scroll to the bottom of the page to find the "Interactions" section of "Advanced tools". First select an orgamism and (optionally) a type of interaction to retrieve, then click "Get interactions". A list of interactions will appear below the button within a few seconds. These interactions can be added one by one, or all interactions can be added by clicking "Add all". Adding interactors to a model will create a place node but no edges.  
+
+			This feature is powered by InterMine databases (flymine, yeastmine, metabolicmine).</p><br>
+
+
+			<br>
+			<h4>3.6 Disperse places</h4>
+			<p>Disperse places are simply a way for there to be multiple references to one entity. As a user, you just need to create a place with the same name as an existing node in another subnetwork and they will automatically be linked. This doesn't add extra functionality, it's just for convenience when working with large, complex networks. It means that you can refer to the same protein multiple times in different subnetworks. A disperse place will have the same marking in every subnetwork. When you use the "merge" tool to combine all the separate networks in a project into one, all appearances of each disperse place will be combined into one. Disperse places are identified by their blue outline.</p>
+			<br>
+			<h4>3.7 Coarse places</h4>
+			<p> Instead of containing tokens, places can contain other places. A place that contains other places is called a "coarse place". Coarse places represent concepts that group normal places together e.g. a place "proteins" may contain "kinases, proteases" etc. and in turn "kinases" may contain specific kinases such as  "GSK3B" etc. When all the networks in a project are merged, coarse places are removed because they are represent concepts not real biological entities. Coarse places are replaced by the places they contain, and all edges that were connected to the coarse place are copied for every place it containes. Note that the merge function will always create a logical AND relationship between all of the child places for each transition connected to the parent place. </p>
+			<p>For an example project using nested networks, go to the Explore page and open the public project "Example: Coarse Places"</p>
+			
+			<br>
+			<h4>3.8 Coarse transitions</h4>
+            <p>Coarse transitions are a way to nest a submodel inside a transition. 
+            They are used to organise a large model into smaller sections, for example grouping all of the places and transitions and the edges between them related to protein folding or glucose transport together. Using nested networks allows us to see the overall connections between functional parts of our model without seeing the full detail of those groups (unless we want to). This method of organising network model can be thought of as a hierarchy from more abstract at the top level, to more detailed layers below. </p>
+			<p>The edges connected to transitions containing networks are also only representative that something in the current network has an edge connecting it to something in the nested network. This interaction must be explicitly created by the user. This will almost always be an edge inside the nested network, connecting one of the places in the nested network to the corse transition in the network in which it is nested.</p>
+			<p>For an example project using nested networks, go to the Explore page and open the public project "Example: Coarse Transitions"</p>
+			
+
+			<br>
+			<h4>3.9 Simulating the model</h4>
+			<p>We provide a separate R script for simulation, available <a href="http://github.com/esyN/esyN-simulation">here</a>. The script is designed to require very minimal editing - only the name of the file containing your model needs to be entered. To export this file from esyN, select "Export" > "Export matrices" from the menu on the left in the Models tool page. This will generate a matrix representation project. This matrix cannot represent nested networks or coarse places, so the project is merged in the background before the matrix is exported.</p>
+			<p>To simulate your model, you must first merge all networks in the project to produce the final model. Even if your project only contains one network, you must still select merge. When the merge operation is completed, the model will automatically be downloaded. Model data is saved in JSON format, so it can easily be used as input for custom analysis scripts.</p>
+			<p>The simulation proceeds as follows. In every step of the simulation, one transition will occur. This causes tokens to be moved between places. The number of tokens moved by a transition is determined by the multiplicity of its input and output edges. This number of tokens will be removed from the input place and added to each output place. As the marking of a place cannot be negative, for a transition to occur all of its input places must contain at least as many tokens as the multiplicity of the edge that connects them to the transition. A transition that meets this requirement is able to occur and is said to be "enabled". In every step of the simulation, one of the enabled transitions is selected at random.</p>
+
+			<br>
+			<h4>3.10 Uploading a model</h4>
+			<b>Uploading from a saved EsyN project</b>
+			<p>
+			
+				Models can be saved offline in JSON format and uploaded later by selecting "Upload" from the menu on the left. 
+			</p>
+			<b>Uploading from Snoopy</b>
+			<p>
+			Snoopy is an advanced tool for the creation of many types of Petri Net. Stochastic Petri Nets created with Snoopy can be uploaded to EsyN by first exporting them for MatLab from Snoopy. This creates a file with the extension '.m' that can be uploaded to EsyN by selecting "Upload" from the menu on the left. Place names and markings, edge multiplicity and parameter k for transitions will all be uploaded. Note that EsyN only supports stochastic Petri Nets with normal and inhbitor edges only. Transitions can only use MassAction kinetics with a single parameter (k).
+			</p>
+
+			<br>
+			<h4>3.11 Merge </h4>
+			<b>Merge all networks in one project</b>
+			
+			<p>
+				"Merging" a project means taking all the information in all of the networks contained within the project and combining them into one network. In particular, coarse transitions, coarse places and disperse places are processed in the following ways.
+			</p>
+			<b>Coarse transitions</b>
+			<p> Coarse transitions are replaced by the networks they contain in the merge operation.
+				<center><img src="coarse-transition-good-merge.png"><img src="coarse-transition-bad-merge.png"></center>
+			</p>
+			<b>Coarse places</b>
+			<p> In the merge, parent nodes are replaced with their children. 
+				<center><img src="coarse-merge.png"></center>
+			</p>
+
+			<b>Disperse places</b>
+			<p>
+				Disperse places are a way to refer to the same pool of an entitiy in several different locations. Therefore when the networks are merged, there will only be one appearance of the disperse place, which will have all the edges connected to it from all the networks in a project.
+			</p>
+
+			<b>Merge multiple projects</b>
+			<p>
+				In esyN, users can easily combine different projects into one. This enables projects to act like reusable modules. When working on a project, users are able to import any of their own projects, or any published project through the "Merge" menu item on the left of the builder tool page. 
+			</p>
+
+			<h4>3.11 Common sources of error</h4>
+			<ol>
+				<li> Consider whether AND or OR logic is appropriate for a transition. All input places for a transition must contain more tokens than the multiplicity of the edge connecting them for the transition to be able to occur, therefore an AND relationship exists between the input places.</li>
+				<li>Merging coarse places will always create an AND relationship between all contained places for each connected transition</li>
+				<li> When nesting networks, be careful that the hierarchy of networks makes sense</li>
+				<li> Don't create loops of nested networks</li>
+				<li> When collaborating on a project with multiple editors, make sure only one person is editing the network at a time - otherwise editors will overwrite each others changes.</li>
+			</ol>
+			<br>
+			
+			<h4>4.0 My esyN</h4>
+			<p>If you log in to esyN, you are able to save models online, share models with other people, publish your models and import published models into your workspace.</p><br>
+
+			<h4>4.1 Creating an account</h4>
+			<p>Any user can login for free in esyN. We use <a href="https://login.persona.org/">Mozilla Persona</a> for the autentication process, we means we don't know (or store) your password. Visit their <a href="https://support.mozilla.org/en-US/kb/what-is-persona-and-how-does-it-work">website</a> to discover all the advantages of using Persona.</p>
+			<br>
+			<h4>4.2 What the "My esyN" page looks like</h4>
+			<p>Within the My esyN page you will see three tabs: 
+              <ol>
+			<li>"My Projects": This is a list of all of your saved projects </li>
+			<li>"Projects Shared with Me": All the projects that have been shared with you</li>
+			<li>"My Published Networks": The projects you have published</li>
+              </ol>
+			</p>
+			<br>
+			<h4>4.3 Saving a model and loading a saved model</h4>
+			<p> Anybody user can save projects offline and re-upload them later to continue working on them. Only registered users can save projects online. Please note there is a limit of 10 projects per user that can be saved online. Each saved project has a history of the previous 10 saved versions. Click "Show history" next to a model to view the previous versions. If you open a previous version of a project, make changes and save online, this version is now the newest version that will be opened by simply clicking the project name.
+
+			</p>
+			<br>
+			<h4>4.3 Viewing project history</h4>
+			<p>Each saved project has a history of the previous 10 saved versions. Click "Show history" next to a model to view the previous versions. If you open a previous version of a project, make changes and save online, this version is now the newest version that will be opened by simply clicking the project name. </p>
+			<br>
+			<h4>4.4 Sharing a model, viewers vs editors</h4>
+			<p>On the right hand side of each project, in the "My Projects" tab, you have the option to edit the properties of the network. By clicking on this option you will be able to change the project name and assign Viewers and Editors. As the name suggests Viewers can only view the network but they cannot save any changes to the shared project, they can however, save the network as a copy, thereby creating their own private copy of the project (not shared).
+			Editors can make and save changes to the shared network.
+
+			</p>
+			<br>
+
+			<h4>4.5 Publishing a model</h4>
+			<p>If you log in to esyN, you can easily make any of your projects publicly available. It can then be be viewed (but not modified) by everybody. You cannot edit the published project, but you can continue to work on your copy. You will be able to delete the published project at any time in the "My Published Networks" tab of My esyN</p>
+			<b>Requirements for published projects</b>
+			<p>When a project is published, the user is asked to provide some additional information that will make their project more useful to others. All of this information will be made public along with the project. Your email address will remain private.
+				<ol>
+					<li>Username (required). The name you would like to use for your public projects. This could be your own name, or you could publish on behalf of a group and use a name representing the whole group. This is the only piece of extra information that is required. </li>
+					<li>Description (optional). This is a brief explanation of the contents of the project and any relevant information, such as what you aimed to include or the method used to determine parameters.</li>
+					<li>Tags (optional). Up to 5 keyword tags may be assigned to a public project to quickly describe their content and group similar projects together.</li>
+				</ol>
+
+			All of this information is searchable, so we encourage users to provide the optional information to maximise the use of their published projects.
+					
+			</p>
+			<br>
+
+
+			<h4>Appendix 1. Petri Nets</h4>
+				
+			Petri Nets are a very simple modelling tool which allows the contruction and the simulation of very complex networks. The strength of this approach is that we can write down our network both visually and in a matrix formalism.
+
+
+			Petri nets are a modelling tool for networks. They consist of a graph composed of Places (i.e. objects, in our case - molecules, genes etc) represented by circles, and Transitions (i.e. actions, in our case - reactions. e.g. Transcription, Protein Folding etc) represented by squares. Directed arcs connect Places with Transitions  and viceversa (i.e. they form a bipartite graph).
+			  
+			Places contain a certain number of tokens (i.e. the objects that the place represents). These tokes will then be used by the transition and will populate another place. In the example below, one copy of protein "A" is being phosphorylated by kinase "K" through the transition "PH" and becomes "A<sub>ph</sub>": 
+			</p>
+			<p><img src="Petri_example2.jpg" width="600"></p>
+
+			
+			<br>
+			<h4>Appendix 2. Matrix Form</h4>
+
+			One of the strengths of Petri Nets is that they can be represented as matrices. In particular we can define: 
+			<center>
+
+			\[
+			M_{i,j} = \begin{bmatrix}
+			  P_{1,1} & \cdots & P_{1,j} \\
+			  \vdots & \ddots & \vdots \\
+			  P_{i,1} & \cdots & P_{i,j}
+			\end{bmatrix}
+			\]
+
+			</center>
+			as the marking matrix - that is the number of tokens in each of the "i" positions "P" at any time "j" where "j = 1" is the initial marking. The Pre-Transition matrix are defined as:
+			<center>
+
+
+			\[
+			TM_{t,p}^{pre} = \begin{bmatrix}
+			  A_{1,1}^{pre} & \cdots & A_{1,p}^{pre} \\
+			  \vdots & \ddots & \vdots \\
+			  A_{t,1}^{pre} & \cdots & A_{t,p}^{pre}
+			\end{bmatrix}
+			\]
+
+			</center>
+			 where we store the value "A" of the arcs. The columns of this matrix represent places and the rows transitions.
+			 and the post-Transition Matrix....
+			 <center>
+			 \[
+			TM_{t,p}^{post} = \begin{bmatrix}
+			  A_{1,1}^{post} & \cdots & A_{1,p}^{post} \\
+			  \vdots & \ddots & \vdots \\
+			  A_{t,1}^{post} & \cdots & A_{t,p}^{post}
+			\end{bmatrix}
+			\]
+			 
+			</center>
+
+			In the example of the phosphorilation of protein "A" before the matrices are:
+
+			\[
+			M = \begin{bmatrix}
+			  A & K & A_{ph}\\
+			  2 & 1 & 0 \\
+			  1& 1 & 1
+			\end{bmatrix}
+			\ \ \ \
+			TM^{pre} = \begin{bmatrix}
+			  X & A & K & A_{ph}\\
+			  PH & 1 & 1 & 0  
+			\end{bmatrix}
+			\ \ \ \
+			TM^{post} = \begin{bmatrix}
+			 X & A & K & A_{ph}\\
+			  PH & 0 & 1 & 1  
+			\end{bmatrix}
+
+
+			\]
+
+
+			
+		</div> <!-- end tab -->
+
+		<div class="tab-pane" id="video">
+		  	<h2>Video tutorials</h2>
+		  	<div id="box-leftside" class="box-leftside">
+				<ul>
+					<li><a href="#M1" class="scroll"> Movie1 </a></li>
+				</ul>
+			</div>
+
+			<div id="box-rightside" class="box-rightside">
+				<a name="M1"></a>
+				<center><h2>Movie 1</h2></center>
+				<center>
+				<iframe width="420" height="315" src="//www.youtube.com/embed/QaJvX9w0snQ?rel=0" frameborder="0" allowfullscreen></iframe>
+				</center>
+				<br><br>
+
+			</div>
+		</div>
+
+		<div class="tab-pane" id="faqs">
+	  		<center><h2>Frequently asked questions</h2></center>
+
+			<a name="makeit"></a>
+			<center> <h3> Making a Network </h3></center>
+			<center>
+			<table width="700" border="1">
+			  <tr>
+			    <td>&nbsp;<a href="#Q1" class="scroll"> What is a Node?</a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q2" class="scroll"> What is a Place? </a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q3" class="scroll"> What is a Coarse Place? </a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q17" class="scroll"> What is a Disperse Place? </a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q4" class="scroll"> What is a Transition? </a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q5" class="scroll"> What is a Coarse Transition? </a></td>
+			  </tr>
+			   <tr>
+			    <td>&nbsp;<a href="#Q6" class="scroll"> What is the Difference Between Places and Nodes? </a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q7" class="scroll"> Why can't I make an edge between two places?</a> </td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q18" class="scroll"> What is an inhibitor edge? </a></td>
+			  </tr>
+			   <tr>
+			    <td>&nbsp;<a href="#Q8" class="scroll"> How do I simulate the network?</a></td>
+			  </tr>
+			   <tr>
+			    <td>&nbsp;<a href="#Q9" class="scroll"> Can I retrieve interactions automatically?</a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q10" class="scroll"> What is the difference between a diagram and a model?</a> </td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q11" class="scroll"> How do I edit the network preferences?</a> </td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q12" class="scroll"> What are the rules for making Models?</a> </td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q13" class="scroll"> What does the marking of a place mean?</a> </td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q14" class="scroll"> What does the multiplicity of an edge mean?</a> </td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q15" class="scroll"> What are tokens?</a> </td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q16" class="scroll"> What are the rules for making Diagrams?</a> </td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q19" class="scroll"> What does "Nest network inside" mean?</a> </td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q20" class="scroll"> Can I recover a deleted network ?</a> </td>
+			  </tr>
+				<tr>
+			    <td>&nbsp;<a href="#Q21" class="scroll"> How do I select multiple nodes ?</a> </td>
+			  	</tr>
+			  	<tr>
+			    <td>&nbsp;<a href="#Q21" class="scroll"> What is the "Search Ensembl" button? </a> </td>
+			  	</tr>
+
+			</table>
+			</center>
+			<br> <br> <br>
+			<a name="collaborate"></a>
+			<center> <h3> Collaborating </h3> </center>
+
+			<center>
+			<table width="700" border="1">
+			  <tr>
+			    <td>&nbsp;<a href="#Q200" class="scroll"> How do I share my networks with my collaborators?</a></td>
+			  </tr>
+			  <tr>
+			   <td>&nbsp;<a href="#Q201" class="scroll"> What is the difference between a "Viewer" and an "Editor"?</a></td> 
+			  </tr>
+			  <tr>
+			   <td>&nbsp;<a href="#Q202" class="scroll"> Can a "Viewer" of my project make changes to it?</a></td> 
+			  </tr>
+			  <tr>
+			   <td>&nbsp;<a href="#Q203" class="scroll"> Someone has shared a network with me, where do I find it ?</a></td> 
+			  </tr>
+			  <tr>
+			   <td>&nbsp;<a href="#Q204" class="scroll"> Is it possible for two users to work on the same network at the same time?</a></td> 
+			  </tr>
+			</table>
+			</center>
+
+			<br> <br> <br>
+
+			<a name="publishit"></a>
+			<center> <h3> Publishing a Network and Working With Public Networks </h3> </center>
+			<center>
+			<table width="700" border="1">
+			<tr>
+			    <td>&nbsp;<a href="#Q300" class="scroll"> What does publishing a network mean?</a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q301" class="scroll"> How do I publish a network?</a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q302" class="scroll"> How do I delete a published network?</a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q303" class="scroll"> What happens if I edit a project I published?</a></td>
+			  </tr>
+			  <tr>
+			    <td>&nbsp;<a href="#Q304" class="scroll"> There is a public project I'd like to work on but I can't edit it. How can I work on it?</a></td>
+			  </tr>
+			  <tr><td>&nbsp;<a href="#Q305" class="scroll"> I'm trying to import a public project but it doesn't work</a></td></tr>
+			  
+			</table>
+			</center>
+			<br><br><br>
+
+
+			<a name="Q1"></a>
+			<left> <h3> What is a Node? </h3> </left>
+			Both Diagrams and Models are graphs of nodes connected by edges. Essentially, nodes can represent anything you like, but their meaning is slightly different in Models and Diagrams
+
+			<h4>Nodes in a Diagram</h4>
+			In a Diagram, nodes represent the elements that you want to show relationships between. Most of the time, we use nodes to represent genes, proteins or metabolites. Edges placed between nodes represent their interactions. For example we could construct a network in which nodes represent different proteins, with edges representing the known physical interactions between them.
+
+			<h4>Nodes in a Model</h4>
+			In Models, there are two basic types of node: Places and Transitions. Places are drawn as circles and represent an entity that you could somehow describe the amount of. This can be a literal amount i.e. number, or a more abstract representation (see <a href="#Q14">What does the marking of a place mean?</a>). For example in a biochemical network, places could be used to represent proteins. Transitions represent actions that happen to whatever is represented by the places. Using our example of places representing proteins, we might create a transition that represents protein folding, or phosphorylation. In the case of phosphorylation, the input places to the transition would be: The protein, its kinase, a phosphate group. The output places would be: The phorphorylated form of the protein, the kinase (it is not consumed).
+
+			<h4>Node Colour Scheme</h4>
+			The colour of a node is a visual indicator of some of it's properties. Normal nodes are white with a black outline. Disperse nodes have a blue outline. Nodes that contain a network have a green outline. Nodes that are parent nodes of other nodes are orange.
+
+			<a name="Q2"></a>
+			<left> <h3> What is a Place? </h3> </left>
+			Places are one of the two types of nodes that exist in a Model. Places are drawn as circles and represent an entity that you could somehow describe the amount of. This can be a literal amount i.e. number, or a more abstract representation (see <a href="#Q14">What does the marking of a place mean?</a>). For example in a biochemical network, places could be used to represent proteins.
+
+			<a name="Q3"></a>
+			<left> <h3> What is a Coarse Place? </h3> </left>
+			Coarse places can only be created in Models. A coarse place is different from a normal place in that it contains other places rather than tokens. It is a placeholder representing the idea that the edges connected to it actually apply to a number of other places (the places it contains). Coarse places can be considered as "classes" of place nodes, which represent a general category of place rather than a specific entity (and therefore they don't require tokens). For example, the coarse place "cities" may contain "Paris" and "London", or the coarse place "Kinase" would contain "Protein kinase A", "Protein kinase B". Any edges that apply the the coarse place will be inherited by the places it contains.
+			Coarse places are represented by orange nodes.
+			<h4>Network merge</h4>
+			When the network is merged to generate the matrix representation used in a simulation, it is important to remember that coarse places will not appear any more. When the network is merged, coarse places are replaced by the places they contain. Coarse places are an abstract representation that allows us to conceptually group places together, but they are not quantifiable themselves.
+			<h4>Advanced use</h4>
+			Coarse places can also be disperse i.e. be referred to in multiple networks.
+
+			<a name="Q17"></a>
+			<left> <h3> What is a Disperse Place or Disperse Node? </h3> </left>
+			Disperse nodes (or disperse places in a Model) allow you to refer to one entity in multiple networks. In Models, only Places can be disperse. In Diagrams, any node can be disperse. When you Merge a project to produce the final Diagram or Model, there will only be one node for each disperse. That node will have all the edges that exist for any appearance of the disperse node in the project.
+			Disperse places and disperse nodes will have a blue outline.
+
+			<a name="Q4"></a>
+			<left> <h3> What is a Transition? </h3> </left>
+			Transitions can only be created in Models. Transitions represent actions that happen to whatever is represented by the places. Using our example of places representing proteins, we might create a transition that represents protein folding, or phosphorylation. In the case of phosphorylation, the input places to the transition would be: The protein, its kinase, a phosphate group. The output places would be: The phorphorylated form of the protein, the kinase (it is not consumed).
+
+			<a name="Q5"></a>
+			<left> <h3> What is a Coarse Transition? </h3> </left>
+			Coarse transitions can only be created in Models. A coarse transition is a transition that contains another network. In other words it's the way to create nested networks. Similarly to coarse places, it's important to remember that coarse transitions themselves do not form part of the final (mathematical) model. Rather, they are a way to organise networks into a hierarchical structure and make them easier to understand. This means that their edges are also only conceptual. Therefore, if we create a coarse transition to represent protein degradation, which has an input edge from a place Protein A, in order for Protein A to interact with the network contained in the Protein Degradation transition, it must be present in that network as well.
+			Coarse transitions will have a green outline
+
+			<a name="Q6"></a>
+			<left> <h3> What is the difference between Places and Nodes? </h3> </left>
+
+			Places are a type of Node that can only be created in a Model.
+
+			<a name="Q7"></a>
+			<left> <h3> Why can't I make an edge between two places?</h3> </left>
+
+			Places cannot be directly connected. In a Model, edges can only connect places with transitions, i.e. actions that happen to them. Edges represent the movement of tokens, and tokens cannot be moved without going through a transition. Similarly, an edge cannot directly connect two transitions becase tokens can only be moved from a place to a transition, or from a transition to a place.
+
+			<a name="Q18"></a>
+			<left> <h3> what is an inhibitor edge?</h3> </left>
+			An inhibitor edge can only be created in a Model. It connects a place to a transition and represents the idea that if there is more than a certain (defined) number of tokens in that place, the connected transition will not be able to occur. To define the threshold for inhibition, change the multiplicity of the inhibitor edge. Inhibitor edges are drawn with a circle instead of a triangular arrowhead.
+
+			<a name="Q8"></a>
+			<left> <h3> How do I simulate the network?</h3> </left>
+			A Model is a viual representation of a mathematical model, which can be simulated using code we provide. Open your model in the Models tool and click "Merge". This will automatically generate and download a representation of your model using matrix notation. This file can be used as input to an R script we provide, available at: 
+			http://github.com/esyN/esyN-simulation. This script does not require any modification to use it for simulation beyond selecting the input file. 
+
+			<a name="Q9"></a>
+			<left> <h3> Can I retrieve interactions automatically? </h3> </left>
+			Yes. Both the Models and Diagrams tool can be used to retrieve known interactions for any node. Simply name the node with the name of a gene or protein and esyN will retrieve the list of interactions for the organism you select. Currently interactions for Human, Fly and Yeast can be retrieved, from MetabolicMine, YeastMine or FlyMine respectively. To use this function, first select the node you wish to retrieve interactions for. The node name will be used to search for interactions so make sure the name is correct. Then in the "Interactions" tab, select the organism and optionally the interaction type (genetic or physical). Then simply click "Get interactions" and a list of known interactions will be generated. These can be added to your network either individually or in bulk (by clicking "Add all"). If you are working on a Diagram, adding an interactor will add both the node and an edge from your selected node. If you are working on a Model, a place will be created for each interactor.
+			<h4>Advanced details</h4>
+			Advanced users may wish to note that adding interactors automatically will create an appearance of a disperse node (in a Diagram) or disperse place (in a Model) if you have already created a node with the same name in another network in the current project. If there is already a node with the same name in the current network, then no new nodes will be created, instead an edge will be added from the selected node to the existing interactor node.
+
+			<a name="Q10"></a>
+			<left> <h3> What is the difference between a diagram and a model? </h3> </left>
+			The diagram is just the graph. Its a useful way to represent any network. The model is a network that can be simulated. In a model the nodes can be places or transitions. The places represent "things" and the transitions, "actions". Places connect only to transitions and vice versa. This models are Petri Nets - see the help pages for a more comprehensive explanations on their properties.      
+
+			<a name="Q11"></a>
+			<left> <h3> How do I edit the network preferences?</h3> </left>
+			You go to the "My esyN" tab. 
+			There you will find the list of your saved projects. On the right hand side there is a button "Edit Properties"
+			which will allow you to change the project name and edit the list of Viewers and Editors.
+
+			<a name="Q12"></a>
+			<left> <h3> What are the rules for making models?</h3> </left>
+			Models are based on Petri Nets, which is a mathematical formalism to represent processes and simulate them. To allow the Models tool to automatically generate a mathematical model of your network, and so that the models you create are valid, certain rules must be followed, some of which are automatically enforced. Here we will briefly discuss the rules for creating Models, please see the full tutorial for more detail.
+
+			<ol>
+				<li> Edges can only connect places to transitions or transitions to places</li>
+				<li> Coarse places can only contain places that are not higher in the hierarchy of coarse places than it is itself</li>
+				<li> Coarse transitions cannot contain a network that is higher in the hierarchy of nested networks than the network it is in itself</li>
+			</ol>
+
+			<a name="Q13"></a>
+			<left> <h3> What does the marking of a place mean?</h3> </left>
+			Places represent entities that can be quantified. In a model, the amount of everythign is represented in terms of a number of tokens in each place. The number of tokens in a place at a given point in time is it's marking. 
+
+			<a name="Q14"></a>
+			<left> <h3> What does the multiplicity of an edge mean?</h3> </left>
+			Edges are directed and connect places to transitions and transitions to places. Edges represent the movement of tokens between places via transitions. The multiplicity of an edge is the number of tokens that are moved if the associated transition occurs ("fires"). The number of tokens moved between places by a transition does not have to be conserved between input and output places.
+
+			<a name="Q15"></a>
+			<left> <h3> What are tokens?</h3> </left>
+			Tokens are used in Models to represent the amount of the entity represented by each place. Tokens are simply a number with no units. When a model is simulated, tokens are moved between places by transitions and the number of tokens moved is determined by the multiplicity of each edge. Tokens do not have to be conserved and can be used to represent any quantity.
+
+			<a name="Q16"></a>
+			<left> <h3> What are the rules for making Diagrams?</h3> </left>
+			There are very few things you cannot do when creating a Diagram as they are visual representations of knowledge rather than executable models. However it is still possible to create an impossible hierarchy of networks if care is not taken.
+
+			<ol>
+				<li> A node that contains a network must not contain a network higher that itself in the hierarchy of nested networks</li>
+			</ol>
+
+			<a name="Q19"></a>
+			<left> <h3> What does "Nest network inside" mean?</h3> </left>
+			In Diagrams, nodes can contain an entire network. In Models, transitions can contain an entire network. These "Nested networks" can be created with the click of a button in either tool and are useful to organise large networks into a hierarchical structure, making each part easier to understand. When you create a nested network, the node containing it effectively becomes a placeholder, if you use the Merge tool (which will convert all networks in your project into one big network), nodes that contain nested networks will no longer exist. This makes sense because typically they are used to represent more abstract concepts than the actual things represented by normal nodes or places, for example a node might contain the whole network of genes related to protein degradation. The node containing the network is not itself a real biological entity, it just helps us organise a large network into different subsections.
+             
+             <a name="Q20"></a>
+			<left> <h3> Can I recover a deleted network?</h3> </left>
+			No ! Unfortunately its not possible. If you are afraid of deleting or losing a network by chance the best practice would be to save your own networks also offline. 
+			
+			<a name="Q21"></a>
+			<left> <h3> How do I select multiple nodes ? </h3> </left>
+			It is possible to select multiple nodes by holding Shift and cliccing on each individual node.
+			  	
+			<a name="Q22"></a>
+			<left> <h3> What is the "Search Ensembl" button?</h3> </left>
+			It is possible to search the node name in <a href="http://www.ensembl.org/index.html">Ensembl</a> 
+			  	
+
+
+			<a name="Q200"></a>
+			<left> <h3> How do I share my networks with my collaborators?</h3> </left>
+			Firstly you need to log in and save your network online. You can then edit the network properties by clicking the "Edit Properties" button on the right hand side of the network you want to share. Within the network properties menu you can add collaborators as "Viewers" or "Editors". "Viewers" can see your work but cannot edit it. They will still be able to save a copy of the project to edit themselves. "Editors" will be able to view and edit your project, but not delete it or change the list of viewers and editors. If you make a collaborator into an editor of a project, it is important to avoid working on the project at the same time, otherwise you will overwrite each others edits. 
+
+			<a name="Q201"></a>
+			<left> <h3> What is the difference between a "Viewer" and an "Editor"?</h3> </left>
+			When you share your project with somebody, you have to assign them to one of two categories: "Viewers" and "Editors". The major difference is that "Viewers" are able to open the project but they cannot make any changes, whereas "Editors" are able to save changes to the project. If you make a collaborator into an editor of a project, it is important to avoid working on the project at the same time, otherwise you will overwrite each others edits. 
+			
+
+			<a name="Q202"></a>
+			<left> <h3> Can a "Viewer" of my project make changes to it?</h3> </left>
+			"Viewers" of your project are just that - viewers. They will not be able to save any changes to your project. They will always have the option to save their own copy, which they can then work on and you will not be able to see or edit unless they share their copy with you.
+
+
+            <a name="Q203"></a>
+			<left> <h3> Someone has shared a network with me, where do I find it ?</h3> </left>
+			In "My esyN" there is a tab called "Projects Shared with Me"
+
+			 <a name="Q204"></a>
+			<left> <h3> Is it possible for two users to work on the same network at the same time?</h3> </left>
+             No ! This situation should be avoided! In this situation the two users will keep on over-writing each other's changes. 
+
+			<a name="Q300"></a>
+			<left> <h3> What does publishing a network mean?</h3> </left>
+			Published networks are visible to anybody, even people who do not have an esyN account, i.e. they are public. When you publish a network we make a copy of your project that anybody can view but nobody can edit. That means that you can keep working on the same project and your work is only visible to you (and anybody you share your private project with) without modifying the public version. Once you have published a project, it will show up in the "My Published Projects" tab in the "My esyN page". You cannot edit a public project, but you can delete it at any time. Although nobody can edit the public project, anybody can make their own copy and work on it themselves. Currently, we do not keep track of who uses what public projects or restrict their use in any way.
+
+
+			<a name="Q301"></a>
+			<left> <h3> How do I publish a network?</h3> </left>
+			You must be logged in to esyN and have the network you want to publish saved online. Then in My Esyn simply click "Publish" at the right hand side of the project name. Publishing creates a public copy of your project, so you can continue to edit your copy without modifying the public version. You can delete a published project at any time.
+			<b>Requirements for published projects</b>
+			<p>When a project is published, the user is asked to provide some additional information that will make their project more useful to others. All of this information will be made public along with the project. Your email address will remain private.
+				<ol>
+					<li>Username (required). The name you would like to use for your public projects. This could be your own name, or you could publish on behalf of a group and use a name representing the whole group. This is the only piece of extra information that is required. </li>
+					<li>Description (optional). This is a brief explanation of the contents of the project and any relevant information, such as what you aimed to include or the method used to determine parameters.</li>
+					<li>Tags (optional). Up to 5 keyword tags may be assigned to a public project to quickly describe their content and group similar projects together.</li>
+				</ol>
+
+			All of this information is searchable, so we encourage users to provide the optional information to maximise the use of their published projects.
+					
+			</p>
+
+			<a name="Q302"></a>
+			<left> <h3> How do I delete a published network?</h3> </left>
+			You need to go to "My esnN" page and then visit the "My Published Networks" tab. For each of your published networks you will have the option to delete them, just click the "delete" button in the corresponding table row. A deleted project cannot be recovered.
+
+			<a name="Q303"></a>
+			<left> <h3> What happens if I edit a project I published?</h3> </left>
+			When you publish a network we make a copy of your project that anybody can view but nobody can edit. That means that you can keep working on the same project and your work is only visible to you (and anybody you share your private project with) without modifying the public version. The public version cannot be edited by anybody, even the creator. The creator will always have the option to delete it.
+			
+
+			<a name="Q304"></a>
+			<left> <h3> There is a published project I'd like to work on but I can't edit it. How can I work on it?</h3> </left>
+			Public projects are designed so that nobody can modify them after they have been made public, even the creator. This means they can serve as a reference e.g. for a publication. Public projects can also act as reusable modules for future work. There are two options for working with the data in public projects. 
+			<ol>
+			<li>
+			If you find a project relevant to you, you are free to make your own copy, and work on that.  If you have an esyN account, just click the "Save" tab beside the model viewer and select "Save a copy". This will create a copy of the project accessible from your "My esyN" page. You can open and edit this model, and you are free to save your changes online or offline. Your changes will only affect your copy of the project and will only be visible to you (and anybody you share it with). If you don't have an esyN account, you can also select "Save offline" to download the model. Then open the appropriate tool page (Diagrams or Models) and select "Upload" to upload the model to the tool and edit it. To save your changes without an account, you will have to select "Save offline" to download your project, then upload it again later to keep working on it.
+			</li>
+			<li>
+			 Import a public project into one of your projects. From the relevant tool page (models or diagrams), select "merge" from the menu on the left, then "merge with a public project". This will show you a list of all public projects of the same type, and you can import them directly into your project. 
+			 </li>
+			</ol>
+
+			<a name="Q305"></a>
+			<left> <h3> I'm trying to import a public project but it doesn't work</h3> </left>
+			The imported project must be compatible with your project, meaning that they do not contain any conflicting information. <br />
+			For Models:
+			<ul>
+			<li>There cannot be transitions with the same name in the two projects</li>
+			<li>The marking for any places common to both projects must be the same</li>
+			<li>The parent-child relationships for any places common to both projects must be the same</li>
+			<li>There cannot be networks with the same name in the two projects</li>
+			</ul>
+			For Diagrams:
+			<ul>
+				<li>There cannot be networks with the same name in the two projects</li>
+			</ul>
+			<br/><br/><br/>
+		</div>
+	</div> <!-- end tab panes -->
+</div> <!-- end content div -->
+
+
+</body>
+
+</html>
