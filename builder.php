@@ -44,7 +44,7 @@
   //this should be replaced by an action in manager.php
   $userid = $_SESSION['userid'];
 
-  $mysqli = new mysqli("localhost", "XXXX", "XXXX", "XXXX");
+  $mysqli = new mysqli("XXXX", "XXXX", "XXXX", "XXXX");
 
   /* check connection */
   if (mysqli_connect_errno()) {
@@ -93,7 +93,8 @@
 <!--
 <script type="text/javascript" src="./src/cytoscape.js-2.0.3/cytoscape_dan.js"></script>
 -->
-<script type="text/javascript" src="./src/cytoscape.js-2.0.3/cytoscape.min.js"></script>
+<!-- <script type="text/javascript" src="./src/cytoscape.js-2.0.3/cytoscape.min.js"></script> -->
+<script type="text/javascript" src="./src/cytoscape.js-2.2.10/cytoscape.min.js"></script>
 
 <!-- enable file download -->
 <script src="src/Blob.js/Blob.js"></script>
@@ -112,10 +113,14 @@
 <script type="text/javascript" src="src/underscore-1.6.0-min.js"></script>
 
 <!-- Style for page -->
+<link href="src/cytoscape.js-navigator/cytoscape.js-navigator.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="css/builder.css">
+
 
 <script src ="analytics.js"></script>
 <meta name="google-site-verification" content="wq-MzHE_599sKpmAIAZkURalSvRGOIzhDnC81xb6mtY" />
+
+<script src="src/cytoscape.js-navigator/cytoscape.js-navigator.js"></script>
 
 
 <!-- Storage -->
@@ -131,16 +136,32 @@
 <?php include("header-menu.php"); ?>
 
 <div id="container">
+<div id="input-mode-align" class="input-mode-align">
+<div id="input-mode-select" class="input-mode-select">
+  <form name='type_form' class="type_form">
+  <div class="toggle-btn-grp">
+      <?php
+      if ($getNetworkType == 'PetriNet'){
+        echo '<div><input type="radio" name="types"  value="n-p" id="n-p"/><label for="n-p" onclick="" class="toggle-btn">Place</label></div>';
+        echo '<div><input type="radio" name="types"  value="n-t" id="n-t"/><label for="n-t" onclick="" class="toggle-btn">Transition</label></div>';
+        echo '<div><input type="radio" name="types"  value="e-n" id="e-n"/><label for="e-n" onclick="" class="toggle-btn">Normal Edge</label></div>';
+        echo '<div><input type="radio" name="types" value="e-i" id="e-i"/><label for="e-i" onclick="" class="toggle-btn" >Inhibitor Edge</label></div>';
+    } else if ($getNetworkType == 'Graph'){
+        echo '<div><input type="radio" name="types"  value="n-p" id="n-p"/><label for="n-p" onclick="" class="toggle-btn">Node</label></div>';
+        echo '<div><input type="radio" name="types"  value="e-n" id="e-n"/><label for="e-n" onclick="" class="toggle-btn">Edge</label></div>';
+        echo '<div><input type="radio" name="types"  value="e-d" id="e-d"/><label for="e-d" onclick="" class="toggle-btn">Directed Edge</label></div>';
+        //echo '<div><input type="radio" name="types"  value="n-t"/><label onclick="" class="toggle-btn">Nested network</label></div>';
+    } else {
+        echo 'invalid network type, please contact an administrator';
+    }
+    ?>
+  </div>
+  </form>
+</div>
+</div>
 <div id="tools">
   <!-- Nav tabs -->
   <ul class="nav nav-stacked">
-  <?php
-    //if it's a Model, show the menu items for coarse places
-    if($getNetworkType == "PetriNet"){
-      echo '<li class="active"><a href="#contains" >Contains</a></li>';
-      echo '<li><a href="#isa" >Contained by</a></li>';
-    }
-  ?>
     <li><a href="#interactions" >Interactions</a></li>
     <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">Network<span class="caret"></span></a>
@@ -149,6 +170,13 @@
         <li><button type="button" id="new" class="btn btn-link" onclick="newnw()">New network</button></li>
           <!-- Rename current network -->
         <li><button class="btn btn-link" onclick="rename_network()">Rename Network</button></li>
+        <!-- layouts -->
+        <li><button class="btn btn-link" onclick="cy.layout({name:'breadthfirst'})">Breadthfirst Layout</button></li>
+        <li><button class="btn btn-link" onclick="cy.layout({name:'circle'})">Circular Layout</button></li>
+        <li><button class="btn btn-link" onclick="cy.layout({name:'grid'})">Grid Layout</button></li>
+        <li><button class="btn btn-link" onclick="cy.layout({name:'random'})">Random Layout</button></li>
+        <!-- fit the window to the current network -->
+        <li><button class="btn btn-link" onclick="cy.fit()">Reset View</button></li>
           <!-- Delete current network -->
         <li><button class="btn btn-link" onclick="remove_network()">Delete Network</button></li>
         
@@ -172,13 +200,6 @@
       </ul>
     </li>
 
-    <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">View<span class="caret"></span></a>
-      <ul class="dropdown-menu">
-       <!-- fit the window to the current network -->
-        <li><button class="btn btn-link" onclick="cy.fit()">Reset View</button></li>
-      </ul>
-    </li>
 
     
     <li class="dropdown">
@@ -223,6 +244,8 @@
   <select id="nwlist" class="form-control">
         <option selected="selected" value="">Select a network</option>
   </select>
+
+<div id="overview"></div>
 
   <!-- Set the filename if allowed - may be hidden by javascript -->
   <br>
@@ -432,29 +455,14 @@
 
 
 </div> <!-- end tools section -->
-  <div id="cy"></div>
+  <div id="cy">
+    
+    
+  </div>
   <div id="controls">
   	<div id="settings">
       <!-- Set what sort of element to add -->
-      <form name='type_form'>
-  <div class="toggle-btn-grp">
-      <?php
-      if ($getNetworkType == 'PetriNet'){
-        echo '<div><input type="radio" name="types"  value="n-p" id="n-p"/><label for="n-p" onclick="" class="toggle-btn">Place</label></div>';
-        echo '<div><input type="radio" name="types"  value="n-t" id="n-t"/><label for="n-t" onclick="" class="toggle-btn">Transition</label></div>';
-        echo '<div><input type="radio" name="types"  value="e-n" id="e-n"/><label for="e-n" onclick="" class="toggle-btn">Normal Edge</label></div>';
-        echo '<div><input type="radio" name="types" value="e-i" id="e-i"/><label for="e-i" onclick="" class="toggle-btn" >Inhibitor Edge</label></div>';
-    } else if ($getNetworkType == 'Graph'){
-        echo '<div><input type="radio" name="types"  value="n-p" id="n-p"/><label for="n-p" onclick="" class="toggle-btn">Node</label></div>';
-        echo '<div><input type="radio" name="types"  value="e-n" id="e-n"/><label for="e-n" onclick="" class="toggle-btn">Edge</label></div>';
-        echo '<div><input type="radio" name="types"  value="e-d" id="e-d"/><label for="e-d" onclick="" class="toggle-btn">Directed Edge</label></div>';
-        //echo '<div><input type="radio" name="types"  value="n-t"/><label onclick="" class="toggle-btn">Nested network</label></div>';
-    } else {
-        echo 'invalid network type, please contact an administrator';
-    }
-    ?>
-  </div>
-  </form>
+      
       <!-- Name the current network -->
       
       </div>
@@ -475,7 +483,7 @@
         <center>
       <form onkeypress="return event.keyCode != 13;"><font size="4" color='#F08147'>Network name:</font><input type="text" name="nw_name" id="nw_name" size="40" maxlength="25" value ="network_name" disabled="disabled"></form>
       &nbsp;    &nbsp;  &nbsp; &nbsp;
-      <form id="set_filename_form" onkeypress="return event.keyCode != 13;"><font size="4" color='#F08147'> Project Name:</font><input type="text" name="set_filename" id="set_filename" size="40" maxlength="50" value ="network_json"></form>
+      <form id="set_filename_form" onkeypress="return event.keyCode != 13;"><font size="4" color='#F08147'> Project Name:</font><input type="text" name="set_filename" id="set_filename" size="35" maxlength="50" value ="network_json"></form>
     </center>
     </div>
 
@@ -519,7 +527,7 @@
   <br />
   
   <br />
-  <button class="btn btn-success" onclick="getInteractions()">Get interactions</button>
+  <button class="btn btn-success" onclick="getInteractions()" id="get-ints-btn">Get interactions</button>
   <br />
   <div id="loading-container"></div>
   
