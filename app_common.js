@@ -16,8 +16,47 @@
 */
 
 //common functions for both builder apps
+
+//initialise switch
+$("[name='my-checkbox']").bootstrapSwitch();
+//bind to onSwitchChange event to update the state of the app
+$("[name='my-checkbox']").on('switchChange.bootstrapSwitch', function (event, state) {
+    window.editingEnabled = state;
+    if(state == false){
+        //enter node mode to prevent edge creation
+        $('#n-p').click()
+        $("[name='types']").prop('disabled','disabled') //disable the input type buttons
+        $('#get-ints-btn').prop('disabled','disabled').text('Enable editing to get interactions') //disable the get interactions button
+        $('#btn-delete-nw').prop('disabled','disabled') //disable the delete network button
+        $('#new').prop('disabled','disabled')
+        $('#btn-rename-nw').prop('disabled','disabled')
+    } else if(state == true){
+        $("[name='types']").prop('disabled','') //enable the input type selection buttons
+        $('#get-ints-btn').prop('disabled','').text('Extend network') //enable get interactions
+        $('#btn-delete-nw').prop('disabled','') //enable delete network
+        $('#new').prop('disabled','')
+        $('#btn-rename-nw').prop('disabled','')
+    }
+});
+//now fix the size
+$('.bootstrap-switch-container').css('width','140px')
+
+/**
+  * NAME: Bootstrap 3 Triple Nested Sub-Menus
+  * This script will active Triple level multi drop-down menus in Bootstrap 3.*
+  */
+$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    // Avoid following the href location when clicking
+    event.preventDefault();
+    // Avoid having the menu to close when clicking
+    event.stopPropagation();
+    // Re-add .open to parent sub-menu item
+    $(this).parent().addClass('open');
+    $(this).parent().find("ul").parent().find("li.dropdown").addClass('open');
+});
+
 //the first time the background is clicked, we add some JS to confirm navigation away from the page
-var confirmOnPageExit = function (e) 
+var confirmOnPageExit = function (e)
 {
     // If we haven't been passed the event get the window.event
     e = e || window.event;
@@ -25,7 +64,7 @@ var confirmOnPageExit = function (e)
     var message = 'Warning: If you have not saved your changes they will be lost.';
 
     // For IE6-8 and Firefox prior to version 4
-    if (e) 
+    if (e)
     {
         e.returnValue = message;
     }
@@ -38,12 +77,12 @@ var confirmOnPageExit = function (e)
 
 //set the default project name
 function getDefaultFilename(){
-	var currentdate = new Date(); 
+	var currentdate = new Date();
 	var filename = "Project: " + currentdate.getDate() + "/"
-    + (currentdate.getMonth()+1)  + "/" 
-    + currentdate.getFullYear() + " @ "  
-    + currentdate.getHours() + ":"  
-    + currentdate.getMinutes() + ":" 
+    + (currentdate.getMonth()+1)  + "/"
+    + currentdate.getFullYear() + " @ "
+    + currentdate.getHours() + ":"
+    + currentdate.getMinutes() + ":"
     + currentdate.getSeconds();
 
     return filename;
@@ -54,7 +93,7 @@ function getDefaultFilename(){
 //i.e. getProjectName(58,function(resp){console.log(resp)})
 function getProjectName(pid,callFn){
     $.ajax({ url: 'manager.php',
-        data: {action: 'XXXX', projectid: pid },
+        data: {action: 'describe', projectid: pid },
         type: 'post',
         dataType: 'text',
         success: function(response){
@@ -69,7 +108,7 @@ function getProjectName(pid,callFn){
 //same as getProjectName() but for a published project. Also requires a callback function do handle the name.
 function getPublishedName(pid,callFn){
     $.ajax({ url: 'manager.php',
-        data: {action: 'XXXX', publishedid: pid },
+        data: {action: 'describePublished', publishedid: pid },
         type: 'post',
         dataType: 'text',
         success: function(response){
@@ -86,9 +125,9 @@ function getProjectData(id,published,callFn){
     //used for merge
     //id is the projectid or publishedid, published is boolean true for published projects, false for private projects
     if(published == true){
-        var data = {action: 'XXXX', publishedid: id};
+        var data = {action: 'viewpublished', publishedid: id};
     } else {
-        var data = {action: 'XXXX', projectid: id, historyid : -1}; //this will always get the most recent version
+        var data = {action: 'view', projectid: id, historyid : -1}; //this will always get the most recent version
     }
 
     $.ajax({
@@ -101,6 +140,59 @@ function getProjectData(id,published,callFn){
         callFn(result);
     })
 };
+
+//get a list of the current user's projects
+function getUserProjects(type, container){
+  var data = {action: 'getUserProjects'};
+  $.ajax({
+    type: "GET",
+    url: "manager.php",
+    data: data
+  })
+  .done( function(result){
+      console.log(result);
+      var rows = result.filter(function(el){
+        return el['type'] == type
+      })
+      buildProjectTable(rows, container);
+  })
+}
+
+//put a list of projects as a table in container
+//user-project-list
+function buildProjectTable(projects, container){
+  var output = document.getElementById(container);
+  output.innerHTML = ''
+  var table = ""
+  if(projects.length == 0){
+    output.innerHTML = "No projects found."
+  } else {
+    table += '<table class="table table-hover table-boredered table-striped">'
+    table += '<thead><tr>';
+    table += '<th>Project Name</th>';
+    table += '<th>Controls</th>';
+    table += '</tr></thead><tbody>';
+    projects.forEach(function(row){
+      table += '<tr><td>';
+      table += row["label"];
+      table += '</td>';
+      table += '<td><button class="btn btn-success" onclick="mergeSavedProject(' + "'" + row['projectid'] + "','false'" + ')">Import</button></td>';
+      table += '</tr>';
+    })
+    table += '</tbody></table>';
+    output.innerHTML = table;
+  }
+}
+
+function setupProjectMergeModal(){
+  getUserProjects(window.esynOpts.type, 'user-project-list')
+  $('#mergeModal').modal("show")
+}
+
+function setupPublicMergeModal(){
+  angular.element($('#publicModalBody')).scope().getProjects()
+  $('#publicModal').modal("show")
+}
 
 //merge two projects into one
 function mergeSavedProject(id,published){
@@ -253,7 +345,7 @@ function mergeSavedProject(id,published){
                             console.log('found ' + dplace + ' in ' + existing[i])
                         }
                     }
-                    
+
 
                 if(found == false){
                     console.log('error finding ',dplace,' in current network')
@@ -270,7 +362,7 @@ function mergeSavedProject(id,published){
                             console.log('found ' + dplace + ' in ' + allNwNames[i])
                         }
                     }
-                    
+
                 };
                 if(found == false){
                     console.log('error finding ',dplace,' in result network')
@@ -278,7 +370,7 @@ function mergeSavedProject(id,published){
                 window.stack.metadata.disperse[dplace] = newDispData;
             })
 
-            
+
             for(var nw in allNwNames){
                 console.log('adding',allNwNames[nw])
                 window.stack[allNwNames[nw]] = result[allNwNames[nw]]
@@ -301,7 +393,7 @@ function mergeSavedProject(id,published){
                     nwOpts += bit
                 };
             };
-                
+
             nwselect.html(nwOpts)
 
             //dimiss the modal form
@@ -336,7 +428,7 @@ function extract(originalObj, keyArray, valArray){
             if(val_overlap.length > 0){
                 obj[key] = val_overlap;
             } else {
-                delete obj[key] 
+                delete obj[key]
             }
         } else {
             delete obj[key]
@@ -376,12 +468,12 @@ function save_network_as_project(){
             if($('#set_filename_form').length != 0){ //if the project id is not -1 we won't be able to edit the name
                 var labeltxt = "Merge result: " + document.getElementById('set_filename').value;
             } else {
-                var currentdate = new Date(); 
+                var currentdate = new Date();
                 var labeltxt = "Merge- esult: " + currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " @ "  
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
+                + (currentdate.getMonth()+1)  + "/"
+                + currentdate.getFullYear() + " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
                 + currentdate.getSeconds();
             }
             thisNwName = labeltxt;
@@ -416,9 +508,9 @@ function save_network_as_project(){
         //Ajax request
         console.log('saving: ' + JSON.stringify(data));
         console.log('with label: ', labeltxt)
-        
+
         $.ajax({ url: '../manager.php', //was '../manager.php'
-             data: {action: 'XXXX', label: labeltxt, data: JSON.stringify(data), type: window.esynOpts.type },
+             data: {action: 'save', label: labeltxt, data: JSON.stringify(data), type: window.esynOpts.type },
              type: 'post',
              dataType: 'text',
              success: function(response){
@@ -479,7 +571,7 @@ function findNodeButton(which){
     } else if(which == 'list'){
         var name = $('#nodelist').val();
     }
-    
+
     var result = findNode(name);
     if(result != ''){
         var result = result.map(function(el){
@@ -510,7 +602,7 @@ function setupSearch(){
         bit = '<option value ="' + all[i] + '">' + all[i] + '</option>'
         nodeOpts += bit
     };
-        
+
     nodeselect.html(nodeOpts)
     update_style() //updateStack removes style
 }
@@ -522,7 +614,18 @@ function goToFromModal(nwname, nodename){
     //select the node that was searched for
     //nothing will be selected when the network is first opened so don't need to check for other selected nodes
     var toupdate = cy.filter("node[name = '" + nodename +"']");
+    //select the node to highlight it
     toupdate.select();
+    cy.fit(toupdate)
+    //centre and zoom on the searched node
+    //doesn't work for some reason
+    // var pos = toupdate.position()
+    // console.log("zooming to node")
+    // cy.zoom({
+    //     level: 1/0,
+    //     position: pos
+    // })
+
 }
 
 //callback function to set the name of a published or saved project
@@ -541,7 +644,58 @@ function tryJSON(str) {
 }
 
 
+////////////////////////////////////////////////////////////////
+// fix for projects broken by network delete bug
+//fix broken projects
+//this function will modify the global stack object so that the metadata does not contain references
+//to any nodes that should have been deleted but were not completely removed
+//it relies on extract() from app_common.js to filter both keys and values of metadata objects
+function fix(){
+    //get all existing nodes
+    var allNwNames = Object.keys(window.stack)
+    allNwNames.splice(allNwNames.indexOf('metadata'),1)
 
+    var allNodes = []
+    var allIds = []
+    for (var i = 0; i < allNwNames.length; i++) {
+        var thisNwNodes = JSON.parse(window.stack[allNwNames[i]]).nodes;
+        var thisNwNames = thisNwNodes.map(function(el){return el.data.name});
+        var thisNwIds = thisNwNodes.map(function(el){return el.data.id});
+        allNodes = allNodes.concat(thisNwNames)
+        allIds = allIds.concat(thisNwIds)
+    };
+
+    //purge metadata
+    //place names
+    window.stack.metadata.place = _.pick(window.stack.metadata.place, allNodes)
+    //transition names
+    window.stack.metadata.transition = _.pick(window.stack.metadata.transition, allNodes)
+    //use extract() function written in app_common.js
+    //contains
+    window.stack.metadata.contains = extract(window.stack.metadata.contains, allNodes, allNodes)
+    //isa
+    window.stack.metadata.isa = extract(window.stack.metadata.isa, allNodes, allNodes)
+    //disperse
+    window.stack.metadata.disperse = extract(window.stack.metadata.disperse, allNodes, allNwNames)
+
+    //create any missing metadata
+    for (var i = 0; i < allNwNames.length; i++) {
+        var thisNwNodes = JSON.parse(window.stack[allNwNames[i]]).nodes;
+        thisNwNodes.forEach(function(el){
+            if(el.classes.search('place') >= 0){
+                if(!window.stack.metadata.place.hasOwnProperty(el.data.name)){
+                    window.stack.metadata.place[el.data.name] = el.data.marking;
+                    console.log('created place metadata for', el.data.name)
+                }
+            } else {
+                if(!window.stack.metadata.transition.hasOwnProperty(el.data.name)){
+                    window.stack.metadata.transition[el.data.name] = el.data.marking;
+                    console.log('created transition metadata for', el.data.name)
+                }
+            }
+        })
+    };
+}
 
 //find duplicate ids
 function findDuplicates(){
@@ -559,7 +713,7 @@ function findDuplicates(){
     var edges = [];
     var ndupeedges = 0
     var ndupenodes = 0
-    
+
     console.log('get all nodes and edges')
     var allNwNames = Object.keys(window.stack)
     allNwNames.splice(allNwNames.indexOf('metadata'),1) //remove metadata from the list of networks
@@ -568,7 +722,7 @@ function findDuplicates(){
     }
     for(var i=0; i<allNwNames.length; i++){
         var tmp = JSON.parse(window.stack[allNwNames[i]]); //load network data - doesn't get displayed
-        
+
         if('nodes' in tmp){ //if the network is empty calling Object.keys gives an error
             var tmp_n = Object.keys(tmp.nodes)
             for(var j=0; j<tmp_n.length;j++){ //needed to build the idmap later
@@ -579,7 +733,7 @@ function findDuplicates(){
                 var tmp_e = Object.keys(tmp.edges)
                 for(var j=0; j<tmp_e.length;j++){
                     edges.push(tmp.edges[tmp_e[j]]);
-                };  
+                };
             };
         }
     };
@@ -603,8 +757,8 @@ function findDuplicates(){
         }
     })
 
-    
-    
+
+
     //make the matrix - can't use make_matrix() as that requires cytoscape to load the network first
     var p_ids = [];
     var t_ids = [];
@@ -619,7 +773,7 @@ function findDuplicates(){
     var namemap = {}; //used to make node name to IDs
     var unique_p = Object.keys(window.stack.metadata.place);
     var unique_t = Object.keys(window.stack.metadata.transition);
-    
+
     console.log('sort nodes into places and transitions')
     //get a list of all places and transitions
     for(var i=0; i<nodes.length; i++){
@@ -640,10 +794,10 @@ function findDuplicates(){
                 namemap[name] = [id];
             };
         } else {
-            t_ids.push(id); 
+            t_ids.push(id);
             t_names.push(name);
             idmap[id] = name;
-            
+
             //probably not needed
             if(name in namemap){
                 namemap[name].push(id);
@@ -668,6 +822,241 @@ function findDuplicates(){
 
 }
 
+//find specific edge that shouldn't be there
+function findOne(){
+
+
+    //also find the networks
+    var jdata = cy.json()['elements'];
+    if('nodes' in jdata){
+        //alert('overwriting data for currently open network')
+        window.stack[window.currentNwName] = JSON.stringify(jdata)
+    };
+    //generate the real network from a network with coarse transitions
+    //have to map id back to name to place edges when merging - IDs will all be unique even if the name is the same
+    //ID -> NAME will be many -> one
+    console.log('start finding appearances of duplicates')
+    //go through each graph in the stack, create a list of all nodes and edges
+    var nodes = [];
+    var edges = [];
+
+    console.log('get all nodes and edges')
+    var allNwNames = Object.keys(window.stack)
+    allNwNames.splice(allNwNames.indexOf('metadata'),1) //remove metadata from the list of networks
+    if(allNwNames.indexOf('Merge-result') >= 0){
+        allNwNames.splice(allNwNames.indexOf('Merge-result'),1) //remove merge network from the list of networks
+    }
+    for(var i=0; i<allNwNames.length; i++){
+        var tmp = JSON.parse(window.stack[allNwNames[i]]); //load network data - doesn't get displayed
+
+        if('nodes' in tmp){ //if the network is empty calling Object.keys gives an error
+            var tmp_n = Object.keys(tmp.nodes)
+            for(var j=0; j<tmp_n.length;j++){ //needed to build the idmap later
+                nodes.push(tmp.nodes[tmp_n[j]]);
+            };
+            //check that the network contains edges
+            if(tmp.hasOwnProperty('edges')){
+                var tmp_e = Object.keys(tmp.edges)
+                for(var j=0; j<tmp_e.length;j++){
+                    edges.push(tmp.edges[tmp_e[j]]);
+                    if(tmp.edges[tmp_e[j]].data.source == 'n546' || tmp.edges[tmp_e[j]].data.target == 'n546'){
+                        console.log('found n546 in ',allNwNames[i],'edge:',tmp.edges[tmp_e[j]])
+                    }
+                };
+            };
+        }
+    };
+
+    edges.forEach(function(el){
+            if(el.data.source == 'n546' || el.data.target == 'n546'){
+                console.log(el)
+            }
+        })
+}
+
+//not used any more - now the imported network is pre-processed.
+//may still be needed to fix errors
+//NOTE: NOT UPDATED FOR COMPATIBILITY WITH CITATIONS
+function reuniqueIds(){
+    remove_style()
+    var jdata = cy.json()['elements'];
+    if('nodes' in jdata){
+        //alert('overwriting data for currently open network')
+        window.stack[window.currentNwName] = JSON.stringify(jdata)
+    };
+    //generate the real network from a network with coarse transitions
+    //have to map id back to name to place edges when merging - IDs will all be unique even if the name is the same
+    //ID -> NAME will be many -> one
+    console.log('start purge of duplicate ids')
+    //go through each graph in the stack, create a list of all nodes and edges
+    var nodes = [];
+    var edges = [];
+    var newNodeCounter = 0;
+    var newEdgeCounter = 0;
+    var nameToId = {};
+    var new_disperse = {}; //keyed by disperse place NAME -> network: [id(s)]
+    var new_place = {};
+    var new_transition = {};
+    var place_locations = {}; //node NAME -> {network_name:[ids]} using CORRECTED ids
+
+    console.log('get all nodes and edges')
+
+    //if the edge data for a network refers to an id that is not that of a node in the current network, delete it
+
+
+    var allNwNames = Object.keys(window.stack)
+    allNwNames.splice(allNwNames.indexOf('metadata'),1) //remove metadata from the list of networks
+    if(allNwNames.indexOf('Merge-result') >= 0){
+        allNwNames.splice(allNwNames.indexOf('Merge-result'),1) //remove merge network from the list of networks
+    }
+    for(var i=0; i<allNwNames.length; i++){
+        var tmp = JSON.parse(window.stack[allNwNames[i]]); //load network data - doesn't get displayed
+
+        if('nodes' in tmp){ //if the network is empty calling Object.keys gives an error
+            var tmp_n = Object.keys(tmp.nodes);
+            var current_ids = []; //all ids of nodes in this network
+            var current_names = [];
+            var new_ids = {}; //the new ids we assign keyed by the CURRENT id
+            var new_nodes = [];
+            var new_edges = [];
+            for(var j=0; j<tmp_n.length;j++){ //needed to build the idmap later
+                current_names.push(tmp.nodes[tmp_n[j]].data.name);
+                current_ids.push(tmp.nodes[tmp_n[j]].data.id);
+            };
+            //check that the network contains edges
+            var real_edges = [];
+            if(tmp.hasOwnProperty('edges')){
+                for(var j=0; j<tmp.edges.length;j++){
+                    //if both the source and target id are found in this network, push to the real_edges array
+                    //later we will assign new ids
+                    if(current_ids.indexOf(tmp.edges[j].data.source)<0 || current_ids.indexOf(tmp.edges[j].data.target)<0){
+                        console.log('deleting edge that should not exist from ',allNwNames[i],tmp.edges[j]);
+                    } else {
+                        real_edges.push(tmp.edges[j]);
+                    }
+                };
+            };
+
+            //now we reassign every node a new id and update the nodes and edges
+            for(var nn = 0; nn<current_ids.length; nn++){
+                //check for duplicate ids in current network
+                if(_.keys(new_ids).indexOf(current_ids[nn]) >= 0){
+                    console.log('duplicate id:', current_ids[nn], ' in network', allNwNames[i])
+                }
+                new_ids[current_ids[nn]] = 'n'+newNodeCounter;
+                newNodeCounter++
+            }
+            for(var nn=0; nn<tmp.nodes.length; nn++){
+                var copy = tmp.nodes[nn];
+                copy.data.id = new_ids[copy.data.id];
+                new_nodes.push(copy);
+                //update place locations lookup - used to create disperse place metadata without having to search
+                if(place_locations.hasOwnProperty(copy.data.name)){
+                    if(place_locations[copy.data.name].hasOwnProperty(allNwNames[i])){
+                        //already an appearance in the current network, add a new one
+                        place_locations[copy.data.name][allNwNames[i]].push(copy.data.id);
+                    } else {
+                        //create an entry for this network
+                        place_locations[copy.data.name][allNwNames[i]] = [copy.data.id];
+                    }
+                } else {
+                    //no existing entries for this place, create a new one
+                    var nwkey = allNwNames[i]
+                    var val = [copy.data.id]
+                    console.log(copy.data.name, ' new place in ', nwkey)
+                    place_locations[copy.data.name] = {}
+                    place_locations[copy.data.name][nwkey] = val
+                }
+                if(new_place.hasOwnProperty(copy.data.name)){
+                    //there is already a place with this name, so it's a disperse place
+                    if(new_disperse.hasOwnProperty(copy.data.name)){
+                        //the place is already disperse, add another appearance
+                        if(new_disperse[copy.data.name].hasOwnProperty(allNwNames[i])){
+                            //there is already an appearance in this network, add another one
+                            new_disperse[copy.data.name][allNwNames[i]].push(copy.data.id)
+                        } else {
+                            //create an entry for this network
+                            new_disperse[copy.data.name][allNwNames[i]] = [copy.data.id]
+                        }
+                    } else {
+                        //this is the second appearance so create the disperse metadata
+                        //this appearance
+                        var nwkey = allNwNames[i]
+                        var val = [copy.data.id]
+                        console.log(copy.data.name, ' disperse in ', nwkey)
+                        new_disperse[copy.data.name] = {}
+                        new_disperse[copy.data.name][nwkey] = val
+
+                        //the other appearance
+                        othernw = place_locations[copy.data.name]
+                        if(_.keys(othernw).length == 1){
+                            //the other appearance is in the same network
+                            otherid = othernw[allNwNames[i]]
+                            otherid.splice(otherid.indexOf(copy.data.id),1)
+                            new_disperse[copy.data.name][allNwNames[i]].push(otherid)
+                        } else if(_.keys(othernw).length == 2){
+                            //the other appearance is in another network
+                            nws = _.keys(othernw)
+                            nws.splice(nws.indexOf(allNwNames[i]),1)
+                            otherid = othernw[nws[0]]
+                            new_disperse[copy.data.name][nws[0]] = otherid //otherid is ALREADY an array, comes from place_locations
+                        } else {
+                            //there should be at most one other location already known
+                            alert('error for disperse place locations for ',copy.data.name)
+                        }
+                    }
+                } else {
+                    //create place or transition metadata
+                    if(copy.classes.search('place') >= 0){
+                        //create place metadata
+                        new_place[copy.data.name] = copy.data.marking
+                    } else {
+                        new_transition[copy.data.name] = copy.data.marking
+                    }
+
+                }
+            }
+            for (var ee = 0; ee < real_edges.length; ee++) {
+                var copy = real_edges[ee]
+                copy.data.source = new_ids[copy.data.source]
+                copy.data.target = new_ids[copy.data.target]
+                copy.data.id = 'e'+newEdgeCounter
+                new_edges.push(copy)
+                newEdgeCounter++
+            };
+
+            //update the stack
+            window.stack[allNwNames[i]] = JSON.stringify({nodes:new_nodes, edges:new_edges})
+        }
+    };
+    console.log('apply new metadata')
+
+    //update metadata
+    window.stack.metadata.place = new_place
+    window.stack.metadata.transition = new_transition
+    window.stack.metadata.disperse = new_disperse
+
+    //isa and contains
+    //contains
+    var allNodes = _.keys(window.stack.metadata.place)
+    window.stack.metadata.contains = extract(window.stack.metadata.contains, allNodes, allNodes)
+    //isa
+    window.stack.metadata.isa = extract(window.stack.metadata.isa, allNodes, allNodes)
+
+    //k
+    window.stack.metadata.k = _.pick(window.stack.metadata.k, allNodes)
+
+    //nodecounter
+    window.stack.metadata.nodecounter = newNodeCounter
+    //edgecounter
+    window.stack.metadata.edgecounter = newEdgeCounter
+
+    //open a different network to bypass the normal function that would update the stack with the currently loaded (potentially broken) data if view switched
+    console.log('load network to reset viewer')
+    load_from_stack(allNwNames[0])
+    //visual style
+
+}
 
 
 //pre-processing of project data to make all the ids compatible with the loaded network - all ids must be unique in the final merged project
@@ -684,7 +1073,7 @@ function ppProject(project){ //input is JSON.parsed project dat
     var new_transition = {};
     var place_locations = {}; //node NAME -> {network_name:[ids]} using CORRECTED ids
     var new_citations = {} //element id -> [PMID]
-    
+
     console.log('get all nodes and edges')
 
     //if the edge data for a network refers to an id that is not that of a node in the current network, delete it
@@ -697,7 +1086,7 @@ function ppProject(project){ //input is JSON.parsed project dat
     }
     for(var i=0; i<allNwNames.length; i++){
         var tmp = JSON.parse(project[allNwNames[i]]); //load network data - doesn't get displayed
-        
+
         if('nodes' in tmp){ //if the network is empty calling Object.keys gives an error
             var tmp_n = Object.keys(tmp.nodes);
             var current_ids = []; //all ids of nodes in this network
@@ -723,7 +1112,7 @@ function ppProject(project){ //input is JSON.parsed project dat
                     } else {
                         real_edges.push(tmp.edges[j]);
                     }
-                };  
+                };
             };
 
             //now we reassign every node a new id and update the nodes and edges
@@ -781,7 +1170,7 @@ function ppProject(project){ //input is JSON.parsed project dat
                         if(_.keys(othernw).length == 1){
                             //the other appearance is in the same network
                             otherid = othernw[allNwNames[i]]
-                            otherid.splice(otherid.indexOf(copy.data.id),1) 
+                            otherid.splice(otherid.indexOf(copy.data.id),1)
                             new_disperse[copy.data.name][allNwNames[i]].push(otherid)
                         } else if(_.keys(othernw).length == 2){
                             //the other appearance is in another network
@@ -802,7 +1191,7 @@ function ppProject(project){ //input is JSON.parsed project dat
                     } else {
                         new_transition[copy.data.name] = copy.data.marking
                     }
-                    
+
                 }
             }
             for (var ee = 0; ee < real_edges.length; ee++) {
@@ -833,7 +1222,7 @@ function ppProject(project){ //input is JSON.parsed project dat
                 }
             })
         }
-        
+
     };
     console.log('apply new metadata')
 
@@ -862,7 +1251,7 @@ function ppProject(project){ //input is JSON.parsed project dat
 function buildCitationInterface(id){
     print('<label class="control-label" for="selectcitation">Citations:</label><div class="input-group"><input type="text" class="form-control" id="textaddcitation"><span class="input-group-btn"><button class="btn btn-default" type="button" id="buttonaddcitation" onclick="addCitationButton('+ "'" + id + "'"+')">Add</button></span></div>')
     print('<div class="control-group"><div class="controls"><select id="selectcitation" name="selectcitation" class="input-sm wide" multiple="multiple"></select></div></div>')
-        
+
     print('<div class="control-group"><button id="buttonremovecitation" class="btn btn-danger" onclick="removeCitationButton('+ "'" + id + "'"+')">Remove Citation(s)</button><button id="gocitation" class="btn btn-primary" onclick="goToCitation()">Go to selected</button></div>')
 
 }
@@ -885,7 +1274,7 @@ function addCitationButton(id) {
   $('#textaddcitation').focus();
 
 
-};  
+};
 
 
 function removeCitationButton(id) {
@@ -904,17 +1293,21 @@ function buildCitationList(id){
         for (var i = 0; i < c.length; i++) {
             $("#selectcitation").append('<option value="' + c[i] + '">' + c[i] + '</option>');
         };
-        
+
     }
 }
 
 function goToCitation(){
     var go = $("#selectcitation").find('option:selected');
     for (var i = 0; i < go.length; i++) {
-        console.log('opening link to:', go[i].value)
-        window.open("http://www.ncbi.nlm.nih.gov/pubmed/?term="+go[i].value,'_blank')
+        var go_str = go[i].value
+        go_str = go_str.replace('pubmed:','')
+        console.log('opening link to:', go_str)
+
+        window.open("http://www.ncbi.nlm.nih.gov/pubmed/?term="+go_str,'_blank')
     };
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -926,3 +1319,122 @@ function canEdit(){
         return true;
     }
 }
+
+///////////////////////////////////////////// loading
+function startLoadAnimation(){
+    if(!window.hasOwnProperty('loadingID')){
+        //don't want to start multiple timers animating the same thing
+        console.log('start load animation')
+        var pos = $('#cy').offset()
+        var w = $('#cy').width()
+        var h = $('#cy').height()
+        $('#loading-text').addClass('load')
+        $('#loading-grey').css({ opacity: 0.7, 'width':w,'height':h, 'left':pos.left , 'top':pos.top}); //set size and position
+        $('#loading-grey').css({background:'#000'}) //the background colour is set to fade to the new colour when changed
+        $('#loading-text').text('Loading...')
+
+        window.loadingID = setInterval(cycleColour, 1000)
+    } else {
+        console.log("load animation already running")
+    }
+}
+
+function stopLoadAnimation(){
+    console.log("stop load animation")
+    $('#loading-grey').css({background:'none'}).css({'width':0,'height':0})
+    $('#loading-text').text('')
+    $('#loading-text').removeClass('load')
+    clearInterval(window.loadingID)
+    delete window.loadingID //so we can start a new timer if needed
+}
+
+function cycleColour(){
+    var colours = [
+        "rgb(36, 69, 123)",
+        "rgb(240, 129, 71)",
+        "rgb(145, 31, 80)" ]
+    var now = $('#loading-text').css("background-color")
+    var idx = colours.indexOf(now)
+    var next = idx + 1
+    if(next >= colours.length){
+        //0 indexed so if next == colours.length it's too high a value
+        next = 0;
+    }
+
+    $('#loading-text').css({"background-color":colours[next]})
+
+}
+
+//generate link to embed network viewer
+function generateEmbedLink(){
+    var params = window.location.href.split("?")[1]
+    var esynlink = "http://www.esyn.org/app.php?embedded=true&"
+    var linkout = esynlink + params
+    return linkout
+}
+
+//determine whether
+function canEmbed(){
+    var params = window.location.href.split("?")[1]
+    var splitparams = params.split("&")
+    var usedparams = splitparams.map(function(el){return el.split("=")[0]})
+    if(usedparams.indexOf("publishedid") >= 0 || usedparams.indexOf("source") >= 0){
+        return true;
+    }
+    return false;
+}
+
+function setupEmbedLinkTxt(){
+    var ok = canEmbed()
+    if(ok){
+        var link = generateEmbedLink()
+        var before = '&lt;iframe class="seamless" frameborder="0" scrolling="no" id="iframe" src="'
+        var after = '" width="500" height="500"&gt;&lt;/iframe&gt;'
+        document.getElementById("embedLinkTxt").innerHTML = "<pre>" + before + link + after + "</pre>"
+        document.getElementById("embedLinkDescription").innerHTML = '<p> Copy and paste the HTML code below to embed this project in another website. For more details on embedding esyN projects, check out the "embed" tab in the <a href="./tutorial.html#embed">documentation</a>.</p>'
+    } else {
+        document.getElementById("embedLinkTxt").innerHTML = "";
+        document.getElementById("embedLinkDescription").innerHTML = '<p>The current project cannot be embedded.</p><p> Only public networks stored in esyN or networks generated automatically using the API can be embedded. Then we can generate the embed code automatically, for you to copy and paste. For more details on embedding esyN, check out the "embed" tab in the <a href="./tutorial.html#embed">documentation</a>.'
+    }
+    $('#embedLinkModal').modal("show")
+}
+
+
+//generic modal popup that can be dismissed and show arbitrary text
+function modalPopup(msg){
+    $("#modalPopupTxt").html(msg)
+    $("#alertModal").modal("show")
+}
+
+//export to PNG
+function toPNG(view){
+    if(view == "all"){
+        var png64 = cy.png({"full":true, "scale":1});
+    } else if (view == "current"){
+        var png64 = cy.png();
+    } else {
+        console.log("specified view not recognised, must be 'current' or 'all'")
+        return false
+    }
+
+    download(png64, 'network.png')
+    return true
+}
+
+//go to tab based on href
+function goToTab(href){
+    //href should be the href attribute of the tab the user would click
+    //don't include the # at the start
+    //would be more reliable to use ID
+
+    //get the element
+    var tab = $("a[href=#" + href + "]")
+
+    //activate the tab
+    tab.click()
+
+    //animate scroll down
+    $('html, body').animate({
+        scrollTop: tab.offset().top
+    }, 1000);
+ }
